@@ -5,6 +5,7 @@ export const GET_HOTELS = gql`
 		hotels {
 			hotelID
 			address
+			ratings
 		}
 	}
 `

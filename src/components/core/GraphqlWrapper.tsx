@@ -1,15 +1,14 @@
-import {
-	ApolloClient,
-	ApolloProvider,
-	NormalizedCacheObject,
-} from "@apollo/client"
+import { ApolloProvider } from "@apollo/client"
 import { FC, ReactNode } from "react"
+import baseClient from "../../graphql/client"
+import useUserContext from "../../hooks/useUserContext"
 
 interface GraphQlWrapperPropsType {
 	children: ReactNode
-	client: ApolloClient<NormalizedCacheObject>
 }
-const GraphqlWrapper: FC<GraphQlWrapperPropsType> = ({ children, client }) => {
+const GraphqlWrapper: FC<GraphQlWrapperPropsType> = ({ children }) => {
+	const { user } = useUserContext()
+	const client = baseClient(user?.uID)
 	return <ApolloProvider client={client}>{children}</ApolloProvider>
 }
 
