@@ -4,11 +4,14 @@ import App from "./App"
 import "./index.css"
 import client from "./graphql/client"
 import GraphqlWrapper from "./components/core/GraphqlWrapper"
+import UserContextProvider from "./components/contexts/UserContextProvider"
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 	<React.StrictMode>
-		<GraphqlWrapper client={client}>
-			<App />
-		</GraphqlWrapper>
+		<UserContextProvider>
+			<GraphqlWrapper client={client}>
+				<App />
+			</GraphqlWrapper>
+		</UserContextProvider>
 	</React.StrictMode>
 )
