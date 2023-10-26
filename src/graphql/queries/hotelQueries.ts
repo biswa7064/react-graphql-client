@@ -11,17 +11,12 @@ export const GET_HOTELS = gql`
 `
 
 export const ADD_HOTEL = gql`
-	type CreateHotel {
-		address: String
-		price: String
-		ratings: Float
-		image: String
-	}
 	mutation AddHotel($req: CreateHotel) {
 		addHotel(req: $req) {
 			hotelID
-			address
+			price
 			ratings
+			address
 		}
 	}
 `

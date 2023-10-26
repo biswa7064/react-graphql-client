@@ -33,6 +33,7 @@ export default function Hotel() {
 		}
 		addHotel({ variables })
 	}
+	console.log({ addedHotel, addHotelLoading, addHotelError })
 	return (
 		<div>
 			<AddHotelForm

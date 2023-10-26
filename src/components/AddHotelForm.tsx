@@ -37,7 +37,7 @@ function AddHotelForm({
 					onClick={() => handleSubmit()}
 					disabled={isAddHotelLoading}
 				>
-					{isAddHotelLoading ? "Loading..." : "SUBMIT"}
+					{isAddHotelLoading ? "LOADING..." : "SUBMIT"}
 				</button>
 			</div>
 		</div>
