@@ -1,9 +1,48 @@
-.hotelCard {
+:root {
+	--cardBg: #28282b;
+	--primaryFont: 1.2em;
+}
+.text_left {
+	text-align: left;
+}
+.display_grid {
+	--_gridColVal: var(--gridColVal, 3);
+	--_gridGap: var(--gridGap, 0.3em);
+	display: grid;
+	grid-template-columns: repeat(var(--_gridColVal), 1fr);
+	gap: var(--_gridGap);
+}
+.hotel_card {
 	display: flex;
 	flex-direction: column;
+	background-color: var(--_cardBg);
 }
 
-.hotelRoot {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
+.hotel {
+	--_cardBg: var(--cardBg);
+	--gridColVal: 3;
+	width: 100%;
+	--cardBg: #28282b;
+}
+
+/* hotel form */
+.hotel_form {
+	--gridColVal: 2;
+	--gridGap: 0.5em;
+	padding: 2em;
+	background-color: var(--cardBg);
+	margin: 2em 0;
+}
+
+.hotel_form input {
+	padding: 1em 0.5em;
+}
+.hotel_form p {
+	font-size: var(--primaryFont);
+}
+
+@media screen and (max-width: 600px) {
+	.hotel_container {
+		--gridColVal: 1;
+	}
 }

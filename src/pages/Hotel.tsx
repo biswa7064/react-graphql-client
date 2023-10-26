@@ -1,18 +1,55 @@
+import { ChangeEvent, ComponentProps, useState } from "react"
+import AddHotelForm from "../components/AddHotelForm"
 import useHotels from "../hooks/useHotels"
 
+type HotelToAddType = ComponentProps<typeof AddHotelForm>["hotelToAdd"]
+
 export default function Hotel() {
-	const { hotelsData, getHotelsLoading } = useHotels()
-	console.log({ hotelsData })
+	const {
+		hotelsData,
+		getHotelsLoading,
+		addHotel,
+		addedHotel,
+		addHotelLoading,
+		addHotelError,
+	} = useHotels()
+	const [hotelToAdd, setHotelToAdd] = useState<HotelToAddType>({
+		address: "",
+		image: "",
+		price: "",
+		ratings: 1,
+	})
+
+	const handleChange = (ev: ChangeEvent<HTMLInputElement>) => {
+		setHotelToAdd((pre) => ({
+			...pre,
+			[ev.target.name]:
+				ev.target.name === "ratings" ? +ev.target.value : ev.target.value,
+		}))
+	}
+	const handleSubmit = () => {
+		const variables = {
+			req: { ...hotelToAdd },
+		}
+		addHotel({ variables })
+	}
 	return (
 		<div>
+			<AddHotelForm
+				hotelToAdd={hotelToAdd}
+				handleChange={handleChange}
+				handleSubmit={handleSubmit}
+				isAddHotelLoading={addHotelLoading}
+			/>
 			{getHotelsLoading ? (
 				<div>Loading....</div>
 			) : (
-				<div className="hotelRoot">
+				<div className="hotel hotel_container display_grid">
 					{hotelsData?.hotels?.map((hotelData) => (
-						<ul key={hotelData?.hotelID}>
-							<li>{hotelData?.address}</li>
-						</ul>
+						<div key={hotelData?.hotelID} className="hotel_card">
+							<p>{hotelData?.address}</p>
+							<p>{"Ratings: " + hotelData?.ratings}</p>
+						</div>
 					))}
 				</div>
 			)}
