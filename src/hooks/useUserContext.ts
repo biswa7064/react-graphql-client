@@ -5,7 +5,7 @@ import {
 } from "../components/contexts/UserContextProvider"
 
 const useUserContext = () => {
-	const { user, setUser } = <UserContextType>useContext(UserContext)
+	const { user, setUser } = useContext<UserContextType>(UserContext)
 	return {
 		user,
 		setUser,

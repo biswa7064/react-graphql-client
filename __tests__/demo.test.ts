@@ -3,4 +3,3 @@ describe("truthy", () => {
 		expect(true).toBeTruthy()
 	})
 })
-export {}

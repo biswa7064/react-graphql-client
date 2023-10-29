@@ -12,13 +12,13 @@
 		"module": "ESNext",
 		"moduleResolution": "Node",
 		"resolveJsonModule": true,
-		"isolatedModules": true,
+		"isolatedModules": false, // to resolve error for --isolatedModules for test cases
 		"noEmit": true,
 		"jsx": "react-jsx",
-		"types": ["node", "jest"],
+		"types": ["jest", "node", "@testing-library/jest-dom"],
 		"baseUrl": "."
 	},
-	"include": ["src", "__tests__"],
+	"include": ["src", "__tests__", "__data__"],
 	"references": [{ "path": "./tsconfig.node.json" }],
 	"exclude": ["node_modules"]
 }

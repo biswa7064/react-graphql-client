@@ -5,14 +5,8 @@ import useHotels from "../hooks/useHotels"
 type HotelToAddType = ComponentProps<typeof AddHotelForm>["hotelToAdd"]
 
 export default function Hotel() {
-	const {
-		hotelsData,
-		getHotelsLoading,
-		addHotel,
-		addedHotel,
-		addHotelLoading,
-		addHotelError,
-	} = useHotels()
+	const { hotelsData, getHotelsLoading, addHotel, addHotelLoading } =
+		useHotels()
 	const [hotelToAdd, setHotelToAdd] = useState<HotelToAddType>({
 		address: "",
 		image: "",
@@ -33,7 +27,6 @@ export default function Hotel() {
 		}
 		addHotel({ variables })
 	}
-	console.log({ addedHotel, addHotelLoading, addHotelError })
 	return (
 		<div>
 			<AddHotelForm
