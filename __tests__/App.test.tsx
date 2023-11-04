@@ -1,9 +1,19 @@
 import App from "../src/App"
-import { render } from "@testing-library/react"
+import { render, renderHook, waitFor } from "@testing-library/react"
 import useHotels from "../src/hooks/useHotels"
+import useUserContext from "../src/hooks/useUserContext"
+import * as React from "react"
 
 jest.mock("../src/hooks/useHotels.ts")
+jest.mock("../src/hooks/useUserContext.ts")
 const mockUseHotels = useHotels as jest.MockedFunction<typeof useHotels>
+const mockUseUserContext = useUserContext as jest.MockedFunction<
+	typeof useUserContext
+>
+
+const mockUser = {
+	uID: "abc-1234",
+}
 
 const mockHotelsData = {
 	hotels: [
@@ -13,11 +23,25 @@ const mockHotelsData = {
 }
 
 describe(App, () => {
+	let effectSpy: jest.SpyInstance
+	let localStorageSpy: jest.SpyInstance
 	beforeEach(() => {
 		jest.clearAllMocks()
-		mockUseHotels.mockReturnValue({
-			hotelsData: mockHotelsData,
-		} as any)
+		effectSpy = jest.spyOn(React, "useEffect")
+		mockUseHotels.mockImplementation(
+			() =>
+				({
+					hotelsData: mockHotelsData,
+				} as any)
+		)
+		mockUseUserContext.mockImplementation(() => ({
+			user: mockUser,
+			setUser: jest.fn(),
+		}))
+		localStorageSpy = jest.spyOn(Object.getPrototypeOf(localStorage), "getItem")
+	})
+	afterEach(() => {
+		jest.restoreAllMocks()
 	})
 	afterAll(() => {
 		jest.resetAllMocks()
@@ -25,7 +49,29 @@ describe(App, () => {
 	it("should correctly render App", () => {
 		const { container } = render(<App />)
 		const AppElement = container.getElementsByClassName("App")
-		expect(AppElement.length).toBe(1)
 		expect(container).toBeInTheDocument()
+		expect(AppElement.length).toBe(1)
+	})
+
+	it("should call both context hand hotels hooks", async () => {
+		const { result, unmount } = renderHook(mockUseUserContext)
+		await waitFor(() =>
+			result.current.setUser((pre) => ({ ...pre, uID: mockUser.uID }))
+		)
+		render(<App />)
+		expect(mockUseHotels).toHaveBeenCalled()
+		expect(mockUseUserContext).toHaveBeenCalled()
+		expect(result.current.user).toMatchObject(mockUser)
+		expect(effectSpy).toHaveBeenCalled()
+		unmount()
+	})
+
+	it("should cover useEffect hook", () => {
+		expect(localStorage.getItem("currentUserUID")).toBe(null)
+		localStorageSpy.mockReturnValue("demo-id")
+		render(<App />)
+		expect(localStorageSpy).toHaveBeenCalled()
+		expect(localStorage.getItem("currentUserUID")).toBe("demo-id")
+		expect(localStorage.getItem("currentUserUID")).not.toBe(null)
 	})
 })
