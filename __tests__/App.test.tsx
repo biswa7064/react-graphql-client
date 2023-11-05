@@ -1,11 +1,13 @@
-import App from "../src/App"
-import { render, renderHook, waitFor } from "@testing-library/react"
-import useHotels from "../src/hooks/useHotels"
-import useUserContext from "../src/hooks/useUserContext"
 import * as React from "react"
+import App from "src/App"
+import { render, renderHook, waitFor, screen } from "@testing-library/react"
+import { MockedProvider } from "@apollo/client/testing"
+import useHotels from "src/hooks/useHotels"
+import useUserContext from "src/hooks/useUserContext"
+import Hotel from "src/pages/Hotel"
 
-jest.mock("../src/hooks/useHotels.ts")
-jest.mock("../src/hooks/useUserContext.ts")
+jest.mock("src/hooks/useHotels.ts")
+jest.mock("src/hooks/useUserContext.ts")
 const mockUseHotels = useHotels as jest.MockedFunction<typeof useHotels>
 const mockUseUserContext = useUserContext as jest.MockedFunction<
 	typeof useUserContext
@@ -21,6 +23,8 @@ const mockHotelsData = {
 		{ hotelID: "2", address: "Hotel 2", ratings: 5, image: "" },
 	],
 }
+
+const providerMocks: any[] = []
 
 describe(App, () => {
 	let effectSpy: jest.SpyInstance
@@ -73,5 +77,17 @@ describe(App, () => {
 		expect(localStorageSpy).toHaveBeenCalled()
 		expect(localStorage.getItem("currentUserUID")).toBe("demo-id")
 		expect(localStorage.getItem("currentUserUID")).not.toBe(null)
+	})
+
+	it("should wrap with apollo provider", () => {
+		// render with MockedProvider from @apollo/client
+		// addTypename = false to prevent @apollo/client from automatically adding special type field to every object
+		render(
+			<MockedProvider addTypename={false} mocks={providerMocks}>
+				<Hotel />
+			</MockedProvider>
+		)
+		// expect(screen.getByText(`Loading....`)).toBeInTheDocument()
+		expect(screen.getByText(`Ratings: ${5}`)).toBeInTheDocument()
 	})
 })

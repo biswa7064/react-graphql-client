@@ -16,7 +16,10 @@
 		"noEmit": true,
 		"jsx": "react-jsx",
 		"types": ["jest", "node", "@testing-library/jest-dom"],
-		"baseUrl": "."
+		"baseUrl": "./",
+		"paths": {
+			"src/*": ["src/*"]
+		}
 	},
 	"include": ["src", "__tests__", "__data__"],
 	"references": [{ "path": "./tsconfig.node.json" }],
