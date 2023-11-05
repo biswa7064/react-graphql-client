@@ -27,6 +27,7 @@ export default function Hotel() {
 		}
 		addHotel({ variables })
 	}
+
 	return (
 		<div>
 			<AddHotelForm
@@ -35,8 +36,11 @@ export default function Hotel() {
 				handleSubmit={handleSubmit}
 				isAddHotelLoading={addHotelLoading}
 			/>
+
 			{getHotelsLoading ? (
-				<div>Loading....</div>
+				<div data-testid="loading-hotels">
+					<p>Loading....</p>
+				</div>
 			) : (
 				<div className="hotel hotel_container display_grid">
 					{hotelsData?.hotels?.map((hotelData) => (

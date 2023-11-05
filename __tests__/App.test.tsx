@@ -1,10 +1,17 @@
 import * as React from "react"
 import App from "src/App"
-import { render, renderHook, waitFor, screen } from "@testing-library/react"
-import { MockedProvider } from "@apollo/client/testing"
+import {
+	render,
+	renderHook,
+	waitFor,
+	screen,
+	act,
+} from "@testing-library/react"
+import { MockedProvider, MockedResponse } from "@apollo/client/testing"
 import useHotels from "src/hooks/useHotels"
 import useUserContext from "src/hooks/useUserContext"
 import Hotel from "src/pages/Hotel"
+import { GET_HOTELS } from "src/graphql/queries"
 
 jest.mock("src/hooks/useHotels.ts")
 jest.mock("src/hooks/useUserContext.ts")
@@ -24,7 +31,15 @@ const mockHotelsData = {
 	],
 }
 
-const providerMocks: any[] = []
+const providerMocks: MockedResponse[] = [
+	{
+		request: {
+			query: GET_HOTELS,
+		},
+		result: { data: mockHotelsData },
+		delay: 500,
+	},
+]
 
 describe(App, () => {
 	let effectSpy: jest.SpyInstance
@@ -44,10 +59,9 @@ describe(App, () => {
 		}))
 		localStorageSpy = jest.spyOn(Object.getPrototypeOf(localStorage), "getItem")
 	})
-	afterEach(() => {
-		jest.restoreAllMocks()
-	})
+
 	afterAll(() => {
+		jest.restoreAllMocks()
 		jest.resetAllMocks()
 	})
 	it("should correctly render App", () => {
@@ -79,7 +93,7 @@ describe(App, () => {
 		expect(localStorage.getItem("currentUserUID")).not.toBe(null)
 	})
 
-	it("should wrap with apollo provider", () => {
+	it("should wrap with apollo provider and give data", async () => {
 		// render with MockedProvider from @apollo/client
 		// addTypename = false to prevent @apollo/client from automatically adding special type field to every object
 		render(
@@ -87,7 +101,20 @@ describe(App, () => {
 				<Hotel />
 			</MockedProvider>
 		)
-		// expect(screen.getByText(`Loading....`)).toBeInTheDocument()
-		expect(screen.getByText(`Ratings: ${5}`)).toBeInTheDocument()
+		expect(await screen.findByText(`Ratings: ${5}`)).toBeInTheDocument()
+	})
+	it("should wrap with apollo provider and give loading elements in the document", async () => {
+		mockUseHotels.mockReturnValue({
+			getHotelsLoading: true,
+		} as any)
+		// render with MockedProvider from @apollo/client
+		// addTypename = false to prevent @apollo/client from automatically adding special type field to every object
+		render(
+			<MockedProvider addTypename={false} mocks={providerMocks}>
+				<Hotel />
+			</MockedProvider>
+		)
+		expect(screen.getByTestId("loading-hotels").textContent).toBe("Loading....")
+		mockUseHotels.mockReset()
 	})
 })
