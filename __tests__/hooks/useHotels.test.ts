@@ -1,11 +1,11 @@
-import * as ApolloClient from "@apollo/client"
 import useHotels from "../../src/hooks/useHotels"
 import { ADD_HOTEL, GET_HOTELS } from "src/graphql/queries/hotelQueries"
 import { renderHook } from "@testing-library/react"
+import { MockApolloClient } from "__data__/mockApolloclient"
 
 jest.mock("@apollo/client")
-let spyMutation = jest.spyOn(ApolloClient, "useMutation")
-let spyQuery = jest.spyOn(ApolloClient, "useQuery")
+let spyMutation = jest.spyOn(MockApolloClient, "useMutation")
+let spyQuery = jest.spyOn(MockApolloClient, "useQuery")
 const mockAddHotel = jest.fn()
 
 const mockReturnedValue: ReturnType<typeof useHotels> = {
