@@ -76,18 +76,19 @@ npm run dev / yarn dev
    ```bash
    npm run test/yarn test
    ```
-   Run test cases with coverage if you have globally done the setup for jest
+3. Run test cases with coverage if you have globally done the setup for jest
 
     1. Coverage for specific file
        
        ```bash
        jest path-name --coverage
        ```
-    3. Coverage for all files
+    2. Coverage for all files
        
        ```bash
        jest --coverage
        ```
+   
 
 ## Acknowledgments
 
