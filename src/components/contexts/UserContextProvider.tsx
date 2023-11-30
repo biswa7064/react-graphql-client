@@ -7,7 +7,7 @@ import {
 	useState,
 } from "react"
 
-interface UserType {
+export interface UserType {
 	uID: string
 }
 export interface UserContextType {
